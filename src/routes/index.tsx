@@ -53,7 +53,7 @@ function Home() {
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/70">
           Solde total
         </p>
-        <p className="mt-1 font-display text-[40px] font-semibold leading-none">
+        <p className="mt-1 font-display text-[38px] leading-none font-semibold break-words">
           {formatMoney(totals.balance, cur)}
         </p>
         <div className="mt-5 grid grid-cols-2 divide-x divide-cream/20">
@@ -83,7 +83,7 @@ function Home() {
             <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-ink/50">
               Revenus · mois
             </p>
-            <p className="mt-0.5 font-display text-2xl font-semibold text-moss">
+            <p className="mt-0.5 font-display text-xl font-semibold text-moss break-words">
               {formatMoney(totals.monthIncome, cur)}
             </p>
           </Card>
@@ -92,7 +92,7 @@ function Home() {
             <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-ink/50">
               Dépenses · mois
             </p>
-            <p className="mt-0.5 font-display text-2xl font-semibold text-plum">
+            <p className="mt-0.5 font-display text-xl font-semibold text-plum break-words">
               {formatMoney(totals.monthExpense, cur)}
             </p>
           </Card>
@@ -104,7 +104,7 @@ function Home() {
               <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-ink/50">
                 Réserve imprévus
               </p>
-              <p className="mt-0.5 font-display text-2xl font-semibold">
+              <p className="mt-0.5 font-display text-xl font-semibold break-words">
                 {formatMoney(state.reserve, cur)}
               </p>
             </Card>
@@ -115,7 +115,7 @@ function Home() {
               <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-ink/50">
                 Abonnements
               </p>
-              <p className="mt-0.5 font-display text-2xl font-semibold">
+              <p className="mt-0.5 font-display text-xl font-semibold break-words">
                 {formatMoney(totals.monthlySubs, cur)}
                 <span className="text-sm text-ink/40"> /m</span>
               </p>
