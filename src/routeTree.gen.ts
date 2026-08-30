@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AbonnementsRouteImport } from './routes/abonnements'
 import { Route as ObjectifsRouteImport } from './routes/objectifs'
+import { Route as ParametresRouteImport } from './routes/parametres'
 import { Route as TransactionsRouteImport } from './routes/transactions'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const ObjectifsRoute = ObjectifsRouteImport.update({
   path: '/objectifs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParametresRoute = ParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TransactionsRoute = TransactionsRouteImport.update({
   id: '/transactions',
   path: '/transactions',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/abonnements': typeof AbonnementsRoute
   '/objectifs': typeof ObjectifsRoute
+  '/parametres': typeof ParametresRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/abonnements': typeof AbonnementsRoute
   '/objectifs': typeof ObjectifsRoute
+  '/parametres': typeof ParametresRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,29 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/abonnements': typeof AbonnementsRoute
   '/objectifs': typeof ObjectifsRoute
+  '/parametres': typeof ParametresRoute
   '/transactions': typeof TransactionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/abonnements' | '/objectifs' | '/transactions'
+  fullPaths:
+    '/' | '/abonnements' | '/objectifs' | '/parametres' | '/transactions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/abonnements' | '/objectifs' | '/transactions'
-  id: '__root__' | '/' | '/abonnements' | '/objectifs' | '/transactions'
+  to: '/' | '/abonnements' | '/objectifs' | '/parametres' | '/transactions'
+  id:
+    | '__root__'
+    | '/'
+    | '/abonnements'
+    | '/objectifs'
+    | '/parametres'
+    | '/transactions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AbonnementsRoute: typeof AbonnementsRoute
   ObjectifsRoute: typeof ObjectifsRoute
+  ParametresRoute: typeof ParametresRoute
   TransactionsRoute: typeof TransactionsRoute
 }
 
@@ -92,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ObjectifsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parametres': {
+      id: '/parametres'
+      path: '/parametres'
+      fullPath: '/parametres'
+      preLoaderRoute: typeof ParametresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/transactions': {
       id: '/transactions'
       path: '/transactions'
@@ -106,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AbonnementsRoute: AbonnementsRoute,
   ObjectifsRoute: ObjectifsRoute,
+  ParametresRoute: ParametresRoute,
   TransactionsRoute: TransactionsRoute,
 }
 export const routeTree = rootRouteImport
