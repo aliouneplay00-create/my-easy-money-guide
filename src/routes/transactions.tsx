@@ -8,7 +8,10 @@ import { useMonevo, useTotals } from "@/lib/monevo/store";
 import { getCategory } from "@/lib/monevo/types";
 
 export const Route = createFileRoute("/transactions")({
-  validateSearch: (search: Record<string, unknown>) => ({ add: search.add === true || search.add === "true" }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    add: search["add"] === true || search["add"] === "true",
+  }),
+
   head: () => ({
     meta: [
       { title: "Transactions — Monevo" },
