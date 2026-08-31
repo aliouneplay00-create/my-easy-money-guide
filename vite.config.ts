@@ -23,7 +23,7 @@ export default defineConfig({
         devOptions: { enabled: false },
         filename: "sw.js",
         manifest: {
-          name: "Monevo — Gérez votre argent simplement",
+          name: "Monevo",
           short_name: "Monevo",
           description:
             "Monevo : solde, dépenses, abonnements et objectifs d'épargne, simplement.",
