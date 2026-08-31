@@ -7,7 +7,17 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { initialState, type AppState, type Goal, type Subscription, type Transaction } from "./types";
+import {
+  CATEGORIES,
+  freePremium,
+  initialState,
+  type AppState,
+  type Category,
+  type Goal,
+  type Subscription,
+  type Transaction,
+} from "./types";
+import { FREE_LIMITS, nextRenewal, type PlanId } from "./billing";
 
 const STORAGE_KEY = "monevo.state.v1";
 
@@ -44,6 +54,10 @@ type StoreValue = {
   updateGoal: (id: string, g: Omit<Goal, "id">) => void;
   addToGoal: (id: string, amount: number) => void;
   removeGoal: (id: string) => void;
+  addCategory: (c: Omit<Category, "id">) => void;
+  removeCategory: (id: string) => void;
+  activatePremium: (plan: PlanId, provider?: string, customerId?: string | null) => void;
+  cancelPremium: () => void;
   resetAll: () => void;
 };
 
@@ -105,7 +119,27 @@ export function MonevoProvider({ children }: { children: ReactNode }) {
           goals: s.goals.map((x) => (x.id === id ? { ...x, saved: Math.max(0, x.saved + amount) } : x)),
         })),
       removeGoal: (id) => patch((s) => ({ ...s, goals: s.goals.filter((x) => x.id !== id) })),
-      resetAll: () => patch(() => ({ ...initialState, onboarded: true })),
+      addCategory: (c) =>
+        patch((s) => ({
+          ...s,
+          customCategories: [...s.customCategories, { ...c, id: `custom-${makeId()}` }],
+        })),
+      removeCategory: (id) =>
+        patch((s) => ({ ...s, customCategories: s.customCategories.filter((c) => c.id !== id) })),
+      activatePremium: (plan, provider = "demo", customerId = null) =>
+        patch((s) => ({
+          ...s,
+          premium: {
+            active: true,
+            plan,
+            provider,
+            customerId,
+            startedAt: new Date().toISOString().slice(0, 10),
+            renewsAt: nextRenewal(plan),
+          },
+        })),
+      cancelPremium: () => patch((s) => ({ ...s, premium: { ...freePremium } })),
+      resetAll: () => patch((s) => ({ ...initialState, onboarded: true, premium: s.premium })),
     }),
     [state, hydrated, patch],
   );
@@ -154,4 +188,35 @@ export function useTotals() {
       available: balance - state.reserve,
     };
   }, [state]);
+}
+
+/** Statut Premium + limites de la version gratuite */
+export function usePremium() {
+  const { state } = useMonevo();
+  const isPremium = state.premium.active;
+  return useMemo(
+    () => ({
+      isPremium,
+      premium: state.premium,
+      limits: FREE_LIMITS,
+      canAddGoal: isPremium || state.goals.length < FREE_LIMITS.goals,
+      canAddSubscription: isPremium || state.subscriptions.length < FREE_LIMITS.subscriptions,
+    }),
+    [isPremium, state.premium, state.goals.length, state.subscriptions.length],
+  );
+}
+
+/** Catégories de base + catégories personnalisées (Premium) */
+export function useCategories(): Category[] {
+  const { state } = useMonevo();
+  return useMemo(() => [...CATEGORIES, ...state.customCategories], [state.customCategories]);
+}
+
+export function useResolveCategory() {
+  const categories = useCategories();
+  return useCallback(
+    (id: string): Category =>
+      categories.find((c) => c.id === id) ?? { id, label: "Autres", icon: "✨" },
+    [categories],
+  );
 }
