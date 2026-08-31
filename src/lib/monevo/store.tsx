@@ -119,7 +119,27 @@ export function MonevoProvider({ children }: { children: ReactNode }) {
           goals: s.goals.map((x) => (x.id === id ? { ...x, saved: Math.max(0, x.saved + amount) } : x)),
         })),
       removeGoal: (id) => patch((s) => ({ ...s, goals: s.goals.filter((x) => x.id !== id) })),
-      resetAll: () => patch(() => ({ ...initialState, onboarded: true })),
+      addCategory: (c) =>
+        patch((s) => ({
+          ...s,
+          customCategories: [...s.customCategories, { ...c, id: `custom-${makeId()}` }],
+        })),
+      removeCategory: (id) =>
+        patch((s) => ({ ...s, customCategories: s.customCategories.filter((c) => c.id !== id) })),
+      activatePremium: (plan, provider = "demo", customerId = null) =>
+        patch((s) => ({
+          ...s,
+          premium: {
+            active: true,
+            plan,
+            provider,
+            customerId,
+            startedAt: new Date().toISOString().slice(0, 10),
+            renewsAt: nextRenewal(plan),
+          },
+        })),
+      cancelPremium: () => patch((s) => ({ ...s, premium: { ...freePremium } })),
+      resetAll: () => patch((s) => ({ ...initialState, onboarded: true, premium: s.premium })),
     }),
     [state, hydrated, patch],
   );
