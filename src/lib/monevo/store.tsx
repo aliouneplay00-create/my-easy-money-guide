@@ -17,7 +17,7 @@ import {
   type Subscription,
   type Transaction,
 } from "./types";
-import { nextRenewal, type PlanId } from "./billing";
+import { FREE_LIMITS, nextRenewal, type PlanId } from "./billing";
 
 const STORAGE_KEY = "monevo.state.v1";
 
@@ -188,4 +188,35 @@ export function useTotals() {
       available: balance - state.reserve,
     };
   }, [state]);
+}
+
+/** Statut Premium + limites de la version gratuite */
+export function usePremium() {
+  const { state } = useMonevo();
+  const isPremium = state.premium.active;
+  return useMemo(
+    () => ({
+      isPremium,
+      premium: state.premium,
+      limits: FREE_LIMITS,
+      canAddGoal: isPremium || state.goals.length < FREE_LIMITS.goals,
+      canAddSubscription: isPremium || state.subscriptions.length < FREE_LIMITS.subscriptions,
+    }),
+    [isPremium, state.premium, state.goals.length, state.subscriptions.length],
+  );
+}
+
+/** Catégories de base + catégories personnalisées (Premium) */
+export function useCategories(): Category[] {
+  const { state } = useMonevo();
+  return useMemo(() => [...CATEGORIES, ...state.customCategories], [state.customCategories]);
+}
+
+export function useResolveCategory() {
+  const categories = useCategories();
+  return useCallback(
+    (id: string): Category =>
+      categories.find((c) => c.id === id) ?? { id, label: "Autres", icon: "✨" },
+    [categories],
+  );
 }
