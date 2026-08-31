@@ -7,7 +7,17 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { initialState, type AppState, type Goal, type Subscription, type Transaction } from "./types";
+import {
+  CATEGORIES,
+  freePremium,
+  initialState,
+  type AppState,
+  type Category,
+  type Goal,
+  type Subscription,
+  type Transaction,
+} from "./types";
+import { nextRenewal, type PlanId } from "./billing";
 
 const STORAGE_KEY = "monevo.state.v1";
 
