@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { MonevoProvider } from "@/lib/monevo/store";
+import { registerAppServiceWorker } from "@/lib/pwa-register";
 
 
 function NotFoundComponent() {
@@ -133,6 +134,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void registerAppServiceWorker();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
