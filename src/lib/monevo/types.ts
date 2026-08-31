@@ -25,16 +25,6 @@ export type Goal = {
   deadline?: string;
 };
 
-export type PremiumStatus = {
-  active: boolean;
-  plan: "monthly" | "yearly" | null;
-  provider: string | null;
-  /** Identifiant client chez le prestataire de paiement (rempli plus tard). */
-  customerId: string | null;
-  startedAt: string | null;
-  renewsAt: string | null;
-};
-
 export type AppState = {
   version: 1;
   onboarded: boolean;
@@ -45,17 +35,6 @@ export type AppState = {
   transactions: Transaction[];
   subscriptions: Subscription[];
   goals: Goal[];
-  customCategories: Category[];
-  premium: PremiumStatus;
-};
-
-export const freePremium: PremiumStatus = {
-  active: false,
-  plan: null,
-  provider: null,
-  customerId: null,
-  startedAt: null,
-  renewsAt: null,
 };
 
 export const initialState: AppState = {
@@ -68,8 +47,6 @@ export const initialState: AppState = {
   transactions: [],
   subscriptions: [],
   goals: [],
-  customCategories: [],
-  premium: freePremium,
 };
 
 export type Category = { id: string; label: string; icon: string };
