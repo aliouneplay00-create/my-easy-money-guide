@@ -54,6 +54,10 @@ type StoreValue = {
   updateGoal: (id: string, g: Omit<Goal, "id">) => void;
   addToGoal: (id: string, amount: number) => void;
   removeGoal: (id: string) => void;
+  addCategory: (c: Omit<Category, "id">) => void;
+  removeCategory: (id: string) => void;
+  activatePremium: (plan: PlanId, provider?: string, customerId?: string | null) => void;
+  cancelPremium: () => void;
   resetAll: () => void;
 };
 
